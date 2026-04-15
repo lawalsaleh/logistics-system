@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  role         String
+  status       String
+  createdAt    DateTime @default(now())
+}
+
+model Order {
+  id           Int      @id @default(autoincrement())
+  orderNumber  String   @unique
+  senderInfo   Json
+  receiverInfo Json
+  status       String
+  createdAt    DateTime @default(now())
+  packages     Package[]
+}
+
+model Package {
+  id           Int      @id @default(autoincrement())
+  orderId      Int
+  trackingCode String   @unique
+  weight       Float
+  dimensions   String
+
+  order    Order    @relation(fields: [orderId], references: [id])
+  delivery Delivery?
+}
+
+model Delivery {
+  id               Int      @id @default(autoincrement())
+  packageId        Int      @unique
+  assignedDriverId Int?
+  status           String
+
+  package Package @relation(fields: [packageId], references: [id])
+}
