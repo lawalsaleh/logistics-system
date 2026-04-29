@@ -1,4 +1,4 @@
-### Logistics System (NestJS) — Orders → Packages → Delivery → Real‑time Tracking
+## Logistics System (NestJS) — Orders → Packages → Delivery → Real‑time Tracking
 A learning-focused logistics/package tracking backend built with NestJS, Prisma (SQLite), JWT auth, role-based access, Swagger docs, and Socket.IO WebSockets for real‑time delivery tracking.
 This project tracks packages from order request to delivery completion and provides both:
 
@@ -6,7 +6,7 @@ REST APIs for reliable workflow actions (source of truth)
 WebSockets for real-time updates to subscribed clients
 
 
-## ✨ Features
+### ✨ Features
 Phase 1 — Core Logistics Workflow (REST + DB)
 
 Users & roles (ADMIN, OPS, DRIVER, CUSTOMER)
@@ -51,7 +51,7 @@ delivery.snapshot (optional on subscribe)
 Access control enforced during subscription
 
 
-🧱 Tech Stack
+### 🧱 Tech Stack
 
 NestJS (TypeScript)
 Prisma ORM
@@ -62,7 +62,7 @@ Socket.IO (WebSockets) for real-time updates
 class-validator + class-transformer for DTO validation
 
 
-🗂️ High-Level Architecture
+### 🗂️ High-Level Architecture
 Clients (Web/Mobile/CLI)
    |
    | REST (create/manage workflow)  --> Source of truth
@@ -81,7 +81,7 @@ SQLite Database (Prisma)
 
 Principle: REST writes to DB first, then WebSockets broadcast after success.
 
-✅ Status Workflows (State Machines)
+### ✅ Status Workflows (State Machines)
 Order Status
 
 DRAFT — created
@@ -104,7 +104,7 @@ CANCELLED
 Status transitions are enforced in services (business rules), not in controllers.
 
 
-🔐 Roles & Permissions (Summary)
+### 🔐 Roles & Permissions (Summary)
 
 ADMIN: full access
 OPS: manage orders/packages, assign drivers
@@ -118,7 +118,7 @@ Roles guard (RolesGuard)
 Ownership checks (customer order ownership, driver assignment)
 
 
-🚀 Getting Started
+### 🚀 Getting Started
 1) Prerequisites
 
 Node.js 18+ recommended
@@ -140,7 +140,7 @@ Open:
 http://localhost:3000/api
 
 
-🧩 Modules & Folder Structure
+### 🧩 Modules & Folder Structure
 Typical structure:
 src/
   auth/
@@ -159,7 +159,7 @@ src/
   app.module.ts
 
 
-🔑 Authentication (Phase 1.2)
+### 🔑 Authentication (Phase 1.2)
 Register
 POST /auth/register
 Example body:
@@ -174,7 +174,7 @@ Use token in Swagger Authorize:
 Bearer <access_token>
 
 
-📦 Core Workflow (Phase 1.3 → 1.6)
+### 📦 Core Workflow (Phase 1.3 → 1.6)
 Typical end-to-end scenario
 1) Customer creates order
 POST /orders
@@ -216,7 +216,7 @@ GET /packages/track/:trackingCode
 Returns minimal data (no PII):
 JSON{  "trackingCode": "TRK-ABC123XYZ9",  "orderNumber": "ORD-...",  "orderStatus": "CONFIRMED",  "deliveryStatus": "IN_TRANSIT",  "createdAt": "..."}Show more lines
 
-⚡ Real-time Tracking (Phase 2.0 — WebSockets)
+### ⚡ Real-time Tracking (Phase 2.0 — WebSockets)
 Overview
 A Socket.IO gateway provides real-time updates for delivery watchers.
 
@@ -299,7 +299,7 @@ POST /deliveries/:id/delivered
 
 You should see updates instantly in the terminal.
 
-🧪 Common Troubleshooting
+### 🧪 Common Troubleshooting
 Prisma errors
 If Prisma client isn’t generated:
 Shellnpx prisma generateShow more lines
