@@ -1,98 +1,323 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+### Logistics System (NestJS) — Orders → Packages → Delivery → Real‑time Tracking
+A learning-focused logistics/package tracking backend built with NestJS, Prisma (SQLite), JWT auth, role-based access, Swagger docs, and Socket.IO WebSockets for real‑time delivery tracking.
+This project tracks packages from order request to delivery completion and provides both:
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+REST APIs for reliable workflow actions (source of truth)
+WebSockets for real-time updates to subscribed clients
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## ✨ Features
+Phase 1 — Core Logistics Workflow (REST + DB)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Users & roles (ADMIN, OPS, DRIVER, CUSTOMER)
+JWT authentication (login/register)
+Order workflow (state machine):
 
-## Project setup
+DRAFT → SUBMITTED → CONFIRMED → CANCELLED
 
-```bash
-$ npm install
-```
 
-## Compile and run the project
+Packages:
 
-```bash
-# development
-$ npm run start
+Create packages for confirmed orders
+Unique tracking codes
+Public tracking lookup (minimal data)
 
-# watch mode
-$ npm run start:dev
 
-# production mode
-$ npm run start:prod
-```
+Deliveries:
 
-## Run tests
+Assign driver to a delivery
+Delivery lifecycle (state machine)
 
-```bash
-# unit tests
-$ npm run test
 
-# e2e tests
-$ npm run test:e2e
+Tracking timeline (append-only events):
 
-# test coverage
-$ npm run test:cov
-```
+Each status change becomes a tracking event
+Timeline retrieval with access control
 
-## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Phase 2 — Real-time Tracking (WebSockets)
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+Socket.IO gateway /tracking
+Subscribe/unsubscribe by deliveryId
+Room-based broadcasting delivery:{deliveryId}
+Events:
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+tracking.event
+delivery.updated
+delivery.snapshot (optional on subscribe)
 
-## Resources
 
-Check out a few resources that may come in handy when working with NestJS:
+Access control enforced during subscription
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
 
-## Support
+🧱 Tech Stack
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+NestJS (TypeScript)
+Prisma ORM
+SQLite (dev)
+JWT + Passport
+Swagger / OpenAPI (/api)
+Socket.IO (WebSockets) for real-time updates
+class-validator + class-transformer for DTO validation
 
-## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+🗂️ High-Level Architecture
+Clients (Web/Mobile/CLI)
+   |
+   | REST (create/manage workflow)  --> Source of truth
+   | WebSocket (live updates)       --> Real-time events
+   v
+NestJS Backend
+ ├─ Auth + Users (JWT, Roles)
+ ├─ Orders (workflow)
+ ├─ Packages (tracking codes)
+ ├─ Deliveries (assignment + lifecycle)
+ ├─ Tracking (timeline events)
+ └─ Realtime Gateway (WS broadcasts)
+   |
+   v
+SQLite Database (Prisma)
 
-## License
+Principle: REST writes to DB first, then WebSockets broadcast after success.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+✅ Status Workflows (State Machines)
+Order Status
+
+DRAFT — created
+SUBMITTED — customer submits
+CONFIRMED — ops confirms
+CANCELLED — cancelled by rules
+
+Delivery Status
+
+PENDING
+ASSIGNED
+PICKED_UP
+IN_TRANSIT
+OUT_FOR_DELIVERY
+DELIVERED
+FAILED
+CANCELLED
+
+
+Status transitions are enforced in services (business rules), not in controllers.
+
+
+🔐 Roles & Permissions (Summary)
+
+ADMIN: full access
+OPS: manage orders/packages, assign drivers
+DRIVER: update delivery status/location for assigned deliveries
+CUSTOMER: create/submit orders, view only their own shipments
+
+Access control is enforced via:
+
+JWT guard (JwtAuthGuard)
+Roles guard (RolesGuard)
+Ownership checks (customer order ownership, driver assignment)
+
+
+🚀 Getting Started
+1) Prerequisites
+
+Node.js 18+ recommended
+Nest CLI (optional): npm i -g @nestjs/cli
+
+2) Install dependencies
+Shellnpm installShow more lines
+3) Configure environment variables
+Create/update .env:
+Plain Textenv isn’t fully supported. Syntax highlighting is based on Plain Text.DATABASE_URL="file:./dev.db"JWT_SECRET="super_secret_dev_key"JWT_EXPIRES_IN="1h"Show more lines
+4) Setup database (Prisma)
+Shellnpx prisma migrate devnpx prisma generateShow more lines
+Optional DB browser:
+Shellnpx prisma studioShow more lines
+5) Run the server
+Shellnpm run start:devShow more lines
+6) Swagger API docs
+Open:
+http://localhost:3000/api
+
+
+🧩 Modules & Folder Structure
+Typical structure:
+src/
+  auth/
+  users/
+  orders/
+  packages/
+  deliveries/
+  tracking/
+  realtime/
+  prisma/
+  common/
+    decorators/
+    guards/
+    enums/
+  main.ts
+  app.module.ts
+
+
+🔑 Authentication (Phase 1.2)
+Register
+POST /auth/register
+Example body:
+JSON{  "email": "ops@example.com",  "password": "password123",  "role": "OPS"}Show more lines
+Login
+POST /auth/login
+Example body:
+JSON{  "email": "ops@example.com",  "password": "password123"}Show more lines
+Response:
+JSON{ "access_token": "..." }Show more lines
+Use token in Swagger Authorize:
+Bearer <access_token>
+
+
+📦 Core Workflow (Phase 1.3 → 1.6)
+Typical end-to-end scenario
+1) Customer creates order
+POST /orders
+JSON{  "senderInfo": {    "contact": { "name": "Sender", "phone": "+82-10-0000-0000" },    "address": { "line1": "123 Main St", "city": "Incheon", "country": "KR" }  },  "receiverInfo": {    "contact": { "name": "Receiver", "phone": "+82-10-9999-9999" },    "address": { "line1": "456 Second St", "city": "Seoul", "country": "KR" }  }}Show more lines
+Order starts in DRAFT.
+2) Customer submits order
+POST /orders/:id/submit
+Order becomes SUBMITTED.
+3) OPS confirms order
+POST /orders/:id/confirm
+Order becomes CONFIRMED.
+4) OPS creates package (tracking code generated)
+POST /orders/:orderId/packages
+JSON{  "weight": 2.5,  "Show more lines
+Returns a trackingCode.
+5) OPS assigns delivery to driver
+POST /deliveries/assign
+JSON{  "packageId": 1,  "driverId": 5}Show more lines
+Delivery becomes ASSIGNED.
+6) Driver updates delivery lifecycle
+
+POST /deliveries/:id/pickup
+POST /deliveries/:id/location
+POST /deliveries/:id/out-for-delivery
+POST /deliveries/:id/delivered
+POST /deliveries/:id/failed
+
+Each action creates a TrackingEvent entry (append-only timeline).
+7) Customer/ops views tracking timeline
+GET /deliveries/:id/tracking
+Response includes:
+
+current delivery status/location
+ordered list of tracking events
+
+
+Public Tracking by Tracking Code (Phase 1.4)
+GET /packages/track/:trackingCode
+Returns minimal data (no PII):
+JSON{  "trackingCode": "TRK-ABC123XYZ9",  "orderNumber": "ORD-...",  "orderStatus": "CONFIRMED",  "deliveryStatus": "IN_TRANSIT",  "createdAt": "..."}Show more lines
+
+⚡ Real-time Tracking (Phase 2.0 — WebSockets)
+Overview
+A Socket.IO gateway provides real-time updates for delivery watchers.
+
+Namespace: /tracking
+Subscriptions are based on deliveryId
+Room naming: delivery:{deliveryId}
+
+When delivery updates occur (via REST), the server broadcasts:
+
+tracking.event (the new timeline entry)
+delivery.updated (snapshot of the updated delivery)
+Optional on subscribe: delivery.snapshot
+
+Why room-based?
+Multiple clients can watch the same delivery:
+
+customer tracking UI
+ops dashboard
+driver app
+
+Rooms let us broadcast to only those who are watching a specific delivery.
+
+Connect & Authenticate (JWT)
+Clients must send JWT during handshake:
+
+Preferred: handshake.auth.token
+Also supported: Authorization: Bearer <token>
+
+If token is invalid → connection is terminated.
+
+Client → Server Events
+subscribeDelivery
+Join updates for a delivery.
+Payload:
+JSON{ "deliveryId": 1 }Show more lines
+Server responses:
+
+subscribed { "deliveryId": 1 }
+optional delivery.snapshot { ... }
+
+unsubscribeDelivery
+Leave updates for a delivery.
+Payload:
+JSON{ "deliveryId": 1 }Show more lines
+Server response:
+
+unsubscribed { "deliveryId": 1 }
+
+
+Server → Client Events
+delivery.snapshot (optional)
+Initial state sent after subscription so the UI can render immediately.
+Example:
+JSON{  "id": 1,  "status": "IN_TRANSIT",  "currentLocation": "Incheon Hub",  "updatedAt": "2026-04-06T05:01:00.000Z",  "assignedDriverId": 5}Show more lines
+tracking.event
+A newly created tracking event (timeline entry).
+Example:
+JSON{  "id": 99,  "deliveryId": 1,  "status": "IN_TRANSIT",  "location": "Incheon Hub",  "note": "Arrived at hub",  "createdAt": "2026-04-06T05:01:00.000Z"}Show more lines
+delivery.updated
+Delivery snapshot after update.
+Example:
+JSON{  "id": 1,  "status": "IN_TRANSIT",  "currentLocation": "Incheon Hub",  "updatedAt": "2026-04-06T05:01:00.000ZShow more lines
+error
+Emitted for invalid subscription or access denied:
+JSON{ "message": "Not authorized to view this delivery" }``Show more lines
+
+Quick WebSocket Test (Node client)
+Install client
+Shellnpm i socket.io-clientShow more lines
+Create ws-test.js
+JavaScriptconst { io } = require("socket.io-client");const token = "PASTE_JWT_TOKEN_HERE";const deliveryId = 1;const socket = io("http://localhost:3000/tracking", {  transports: ["websocket"],  auth: { token },});socket.on("connect", () => {  console.log("Connected:", socket.id);  socket.emit("subscribeDelivery", { deliveryId });});socket.on("subscribed", (data) => console.log("Subscribed:", data));socket.on("delivery.snapshot", (d) => console.log("SNAPSHOT:", d));socket.on("tracking.event", (evt) => console.log("TRACKING EVENT:", evt));socket.on("delivery.updated", (d) => console.log("DELIVERY UPDATED:", d));socket.on("error", (e) => console.log("ERROR:", e));socket.on("disconnect", () => console.log("Disconnected"));Show more lines
+Run it
+Shellnode ws-test.jsShow more lines
+Now trigger REST updates (Swagger):
+
+POST /deliveries/:id/pickup
+POST /deliveries/:id/location
+POST /deliveries/:id/out-for-delivery
+POST /deliveries/:id/delivered
+
+You should see updates instantly in the terminal.
+
+🧪 Common Troubleshooting
+Prisma errors
+If Prisma client isn’t generated:
+Shellnpx prisma generateShow more lines
+If migrations are out of sync:
+Shellnpx prisma migrate devShow more lines
+WebSocket connects but subscription fails
+
+Confirm JWT is valid
+Confirm deliveryId exists
+Confirm access rules:
+
+DRIVER must be assigned
+CUSTOMER must own the order for that delivery
+
+
+
+No real-time events received
+
+Ensure client subscribed to the correct deliveryId
+Ensure lifecycle endpoints are emitting events after successful DB transaction
+Check server logs for errors

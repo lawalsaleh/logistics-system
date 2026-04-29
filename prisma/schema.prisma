@@ -11,6 +11,23 @@ datasource db {
   provider = "sqlite"
 }
 
+enum OrderStatus {
+  DRAFT
+  SUBMITTED
+  CONFIRMED
+  CANCELLED
+}
+
+enum DeliveryStatus {
+  PENDING
+  ASSIGNED
+  PICKED_UP
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  FAILED
+  CANCELLED
+}
 
 model User {
   id           Int      @id @default(autoincrement())
@@ -19,15 +36,21 @@ model User {
   role         String
   status       String
   createdAt    DateTime @default(now())
+  orders       Order[]
+
+  deliveries     Delivery[]      @relation("DriverDeliveries")
+  trackingEvents TrackingEvent[]
 }
 
 model Order {
-  id           Int      @id @default(autoincrement())
-  orderNumber  String   @unique
+  id           Int         @id @default(autoincrement())
+  orderNumber  String      @unique
   senderInfo   Json
   receiverInfo Json
-  status       String
-  createdAt    DateTime @default(now())
+  status       OrderStatus @default(DRAFT)
+  createdAt    DateTime    @default(now())
+  createdById  Int
+  createdBy    User        @relation(fields: [createdById], references: [id])
   packages     Package[]
 }
 
@@ -37,16 +60,38 @@ model Package {
   trackingCode String   @unique
   weight       Float
   dimensions   String
+  createdAt    DateTime @default(now())
 
-  order    Order    @relation(fields: [orderId], references: [id])
+  order    Order     @relation(fields: [orderId], references: [id])
   delivery Delivery?
 }
 
 model Delivery {
-  id               Int      @id @default(autoincrement())
-  packageId        Int      @unique
+  id               Int             @id @default(autoincrement())
+  packageId        Int             @unique
   assignedDriverId Int?
-  status           String
+  status           DeliveryStatus  @default(PENDING)
+  currentLocation  String?
+  updatedAt        DateTime        @updatedAt
+  createdAt        DateTime        @default(now())
+  assignedDriver   User?           @relation("DriverDeliveries", fields: [assignedDriverId], references: [id])
+  package          Package         @relation(fields: [packageId], references: [id])
+  events           TrackingEvent[]
+}
 
-  package Package @relation(fields: [packageId], references: [id])
+model TrackingEvent {
+  id         Int            @id @default(autoincrement())
+  deliveryId Int
+  status     DeliveryStatus
+  location   String?
+  note       String?
+  createdAt  DateTime       @default(now())
+
+  createdById Int?
+  createdBy   User? @relation(fields: [createdById], references: [id])
+
+  delivery Delivery @relation(fields: [deliveryId], references: [id])
+
+  @@index([deliveryId])
+  @@index([createdAt])
 }
